@@ -1,0 +1,1 @@
+export const difKelvin = 273.15;
