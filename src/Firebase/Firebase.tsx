@@ -1,7 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore';
+import {alertSuccess} from "../Utils/AlertSuccess.tsx";
+import {alertError} from "../Utils/AlertError.tsx";
 
 
 
@@ -41,3 +43,22 @@ deleteObject(desertRef).then(() => {
 // auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
 //     if (!idTokenResult.)
 // });
+
+export function register(email: string, password: string) {
+    createUserWithEmailAndPassword(auth, email, password).then((userLog) => {
+        console.log(userLog.user);
+        alertSuccess('Registro exitoso')
+    }).catch((error) => {
+        console.log(error.message);
+        alertError(error.message);
+    })
+}
+
+export async function login(email: string, password: string) {
+    try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
+        return user.user;
+    } catch (error) {
+        return error;
+    }
+}
